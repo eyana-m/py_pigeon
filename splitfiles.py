@@ -46,7 +46,6 @@ print(df.columns)
 def getSalesRep():
     df['Sales Representative'].fillna('Unknown', inplace = True)
     print('Getting all Sales Representatives')
-
     # --- EXCLUDE REPS ----
     #df_filtered = df[~df['Sales Representative'].isin(EXCLUDE_LIST)]
     #df_roster = df_filtered['Sales Representative'].unique()
