@@ -40,9 +40,9 @@ print(df.sample(10))
 print(len(df))
 print(df.columns)
 
-# --------
+# ---------------------------------------
 # Returns a list of Sales Representatives included in the split
-# --------
+# ---------------------------------------
 def getSalesRep():
     df['Sales Representative'].fillna('Unknown', inplace = True)
     print('Getting all Sales Representatives')
@@ -142,9 +142,9 @@ def writeExcelFileByRep(owner_value, output_folder):
 
 
 
-# --------
+# ---------------------------------------
 # Creates files per included Sales Representative
-# --------
+# ---------------------------------------
 def loopRosterCreateFiles(reps):
 
     print("Creating files!")
@@ -181,4 +181,9 @@ def loopRosterCreateFiles(reps):
         # Uploads to Google Drive
         #loopGSpreadsheet(writeToGDrive(rep_excel_file_no_ext,rep_excel_path,getFolder(rep)))
 
-loopRosterCreateFiles(getSalesRep())
+
+def main():
+    loopRosterCreateFiles(getSalesRep())
+
+if __name__ == '__main__':
+    main()
