@@ -399,13 +399,13 @@ def loopRosterCreateFiles(reps):
         rep_excel_path = output_folder+"/"+rep_excel_file
 
         # Copies template
-        #shutil.copy(FILE_TEMPLATE,rep_excel_path)
+        shutil.copy(FILE_TEMPLATE,rep_excel_path)
 
         # Writes Filtered Data to Excel
-        #writeExcelFileByRep(rep,rep_excel_path)
+        writeExcelFileByRep(rep,rep_excel_path)
 
         # Uploads to Google Drive
-        loopGSpreadsheet(writeToGDrive(rep_excel_file_no_ext,rep_excel_path,getFolder(rep)))
+        #loopGSpreadsheet(writeToGDrive(rep_excel_file_no_ext,rep_excel_path,getFolder(rep)))
 
 
 def generateNewFolders(reps):
