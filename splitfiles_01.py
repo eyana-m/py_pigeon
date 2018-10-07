@@ -13,8 +13,6 @@ import openpyxl
 from openpyxl import load_workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 
-
-import random
 import time
 from time import sleep
 import datetime
@@ -35,21 +33,13 @@ VERSION = str(now.month).zfill(2) + str(now.day).zfill(2)
 df = pd.read_excel(FILE_MASTERLIST,"CONTACTS_FINAL")
 
 
-
-# ---------------------------------------
-# ---------------------------------------
-# ---------------------------------------
-# Part 1: Split files by User
-# ---------------------------------------
-# ---------------------------------------
-# ---------------------------------------
-
 # ---------------------------------------
 # Returns a list of Sales Representatives included in the split
 # ---------------------------------------
 def getSalesRep():
     df['Sales Representative'].fillna('Unknown', inplace = True)
     print('Getting all Sales Representatives')
+
     # --- EXCLUDE REPS ----
     #df_filtered = df[~df['Sales Representative'].isin(EXCLUDE_LIST)]
     #df_roster = df_filtered['Sales Representative'].unique()
@@ -187,6 +177,7 @@ def loopRosterCreateFiles(reps):
 
 
 def main():
+
     loopRosterCreateFiles(getSalesRep())
 
 if __name__ == '__main__':
