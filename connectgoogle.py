@@ -124,18 +124,16 @@ def getAllFolders(folder_id, spreadsheet_id):
 
 
         file_count = countFiles(item['id'])
-        last_modified_date = getLastModifiedDate(item['id'],file_count)
 
         print("----", person_name)
         print("----", file_count)
-        print("----", last_modified_date)
 
         item['person'] = person_name
         item['file_count'] = file_count
         item['link'] ="https://drive.google.com/drive/folders/"+item['id']
 
 
-        values.append([item['person'],item['name'],item['link'],item['id'],item['file_count'],str(now),last_modified_date])
+        values.append([item['person'],item['name'],item['link'],item['id'],item['file_count'],str(now)])
 
         count+=1
         #range_ = 'Folder Lookup June 8!A'+str(count)+':F'+str(count)
@@ -201,10 +199,6 @@ def colorAndSort(spreadsheet_id):
     print('{0} cells updated.'.format(len(response.get('replies'))));
 
 
-getAllFolders(FOLDER_ID,SS_ID)
-colorAndSort(SS_ID)
-
-
 def readSheet():
 
     SPREADSHEET_ID =  SS_ID
@@ -219,3 +213,12 @@ def readSheet():
         for row in values:
             # Print columns A and E, which correspond to indices 0 and 4.
             print('%s, %s' % (row[0], row[1]))
+
+
+def main():
+    getAllFolders(FOLDER_ID,SS_ID)
+    colorAndSort(SS_ID)
+    #loopRosterCreateFiles(getSalesRep())
+
+if __name__ == '__main__':
+    main()
