@@ -1,4 +1,10 @@
-
+from __future__ import print_function
+#googleapiclient.discovery
+from apiclient.discovery  import build
+from httplib2 import Http
+from oauth2client import file, client, tools
+from oauth2client.contrib import gce
+from apiclient.http import MediaFileUpload
 import numpy as np
 import pandas as pd
 from pandas import ExcelWriter
@@ -12,13 +18,22 @@ import shutil
 import openpyxl
 from openpyxl import load_workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
-
+from openpyxl.chart import (
+    LineChart,
+    Reference,
+    Series
+)
 
 import random
 import time
 from time import sleep
 import datetime
 import csv
+
+
+CLIENT_SECRET = "/Users/eyanamallari/Projects/py_distribute_data/client_secret.json"
+
+
 
 FILE_MASTERLIST = '/Users/eyanamallari/Projects/py_distribute_data/Input/CONTACTS_ALL_STATIC.xlsx'
 FILE_TEMPLATE ='/Users/eyanamallari/Projects/py_distribute_data/Input/Contacts_Template.xlsx'
@@ -33,6 +48,48 @@ MONTH = "Sept 2018"
 VERSION = str(now.month).zfill(2) + str(now.day).zfill(2)
 
 df = pd.read_excel(FILE_MASTERLIST,"CONTACTS_FINAL")
+
+# --------------------------------
+# GDrive API: GDrive Authorization
+# --------------------------------
+
+SCOPES='https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/spreadsheets'
+store = file.Storage('token.json')
+creds = store.get()
+if not creds or creds.invalid:
+    flow = client.flow_from_clientsecrets(CLIENT_SECRET, SCOPES)
+    creds = tools.run_flow(flow, store)
+SERVICE = build('drive', 'v3', http=creds.authorize(Http()))
+SS_SERVICE = build('sheets', 'v4', http=creds.authorize(Http()))
+
+
+PARENT_FOLDER = '19FBo4iSjyCS3NcqX6zaNgxtXWMqW7AyM'
+
+# ------------------------------------
+# GDrive API: Check if Folder exists
+# ------------------------------------
+def folderInGDrive(filename):
+    results = SERVICE.files().list(q="mimeType='application/vnd.google-apps.folder' and name='"+filename+"' and trashed = false and parents in '"+PARENT_FOLDER+"'",fields="nextPageToken, files(id, name)").execute()
+    items = results.get('files', [])
+    if items:
+        return True
+    else:
+        return False
+
+# ---------------------------------------
+# GDrive API: Create New Folder
+# ---------------------------------------
+def createGDriveFolder(filename,parent):
+    file_metadata = {'name': filename,'parents': [parent],
+    'mimeType': "application/vnd.google-apps.folder"}
+
+    folder = SERVICE.files().create(body=file_metadata,
+                                        fields='id').execute()
+    print('Upload Success!')
+    print('FolderID:', folder.get('id'))
+    return folder.get('id')
+
+
 
 
 
@@ -186,8 +243,28 @@ def loopRosterCreateFiles(reps):
         #loopGSpreadsheet(writeToGDrive(rep_excel_file_no_ext,rep_excel_path,getFolder(rep)))
 
 
+def generateNewFolders(reps):
+
+    # FOLDERS LOOKUP
+    count = 1
+    folders = {}
+    managers =[]
+    for rep in reps:
+        foldername = "Contacts List - " + str(rep)
+        if folderInGDrive(foldername) == False:
+            folder_id = createGDriveFolder(foldername,PARENT_FOLDER)
+            print("New Folder", foldername, folder_id)
+            count += 1
+        # else:
+        #     print(foldername, "exists!")
+        time.sleep(5)
+    print("Created", count, "new folders")
+
+
+
 def main():
-    loopRosterCreateFiles(getSalesRep())
+    generateNewFolders(getSalesRep())
+    #loopRosterCreateFiles(getSalesRep())
 
 if __name__ == '__main__':
     main()
