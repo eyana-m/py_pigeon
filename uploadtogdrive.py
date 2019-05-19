@@ -31,20 +31,20 @@ import datetime
 import csv
 
 
-CLIENT_SECRET = "/Users/eyanamallari/Projects/py_distribute_data/client_secret.json"
+CLIENT_SECRET = "/Users/eyana.mallari/Projects-Local/client_secret_eyanag.json"
 
 
 
-FILE_MASTERLIST = '/Users/eyanamallari/Projects/py_distribute_data/Input/CONTACTS_ALL_STATIC.xlsx'
-FILE_TEMPLATE ='/Users/eyanamallari/Projects/py_distribute_data/Input/Contacts_Template.xlsx'
-FILE_FOLDERS = '/Users/eyanamallari/Projects/py_distribute_data/Input/Pigeon Masterlist - Folders Lookup.csv'
-OUTPUT_DIRECTORY = '/Users/eyanamallari/Projects/py_distribute_data/Output/'
+FILE_MASTERLIST = 'Input/CONTACTS_ALL_STATIC.xlsx'
+FILE_TEMPLATE ='Input/Contacts_Template.xlsx'
+FILE_FOLDERS = 'Input/Pigeon Masterlist - Folders Lookup.csv'
+OUTPUT_DIRECTORY = 'Output/'
 EXCLUDE_LIST = []
 INCLUDE_LIST = ['Calista Rosales', 'Bianca Cardenas', 'Colette Black']
 
 now = datetime.datetime.now()
-QUARTER = "2018Q3"
-MONTH = "Sept 2018"
+QUARTER = "2019Q2"
+MONTH = "May 2019"
 VERSION = str(now.month).zfill(2) + str(now.day).zfill(2)
 
 df = pd.read_excel(FILE_MASTERLIST,"CONTACTS_FINAL")
@@ -253,6 +253,21 @@ def getFolder(person):
         print('FOLDER NOT FOUND!!!!!', person)
 
 
+def getFolderfromGDrive(folder_name):
+# Main Folder
+
+    results = SERVICE.files().list(q="mimeType='application/vnd.google-apps.folder' and name='"+folder_name+"' and trashed = false and parents in '"+PARENT_FOLDER+"'",fields="nextPageToken, files(id, name)").execute()
+
+    items = results.get('files', [])
+
+    #print(items)
+
+    if not items:
+        return ""
+    else:
+        print(items[-1]['name'])
+        return items[-1]['id']
+
 
 # ---------------------------------------
 # Upload Files in GDrive
@@ -286,7 +301,38 @@ def loopRosterUploadFiles(reps):
 
 
         # Uploads to Google Drive
-        loopGSpreadsheet(writeToGDrive(rep_excel_file_no_ext,rep_excel_path,getFolder(rep)))
+        loopGSpreadsheet(writeToGDrive(rep_excel_file_no_ext,rep_excel_path,getFolderfromGDrive(output_rep)))
+
+
+def getSalesRep():
+    df['Sales Representative'].fillna('Unknown', inplace = True)
+    print('Getting all Sales Representatives')
+
+    # --- EXCLUDE REPS ----
+    #df_filtered = df[~df['Sales Representative'].isin(EXCLUDE_LIST)]
+    #df_roster = df_filtered['Sales Representative'].unique()
+
+
+    # --- INCLUDE REPS ----
+    df_filtered = df[df['Sales Representative'].isin(INCLUDE_LIST)]
+    df_roster = df_filtered['Sales Representative'].unique()
+
+    #df_roster = df['Sales Representative'].unique()
+
+    print(df_roster)
+    d = df_roster.tolist()
+    d_final = d
+
+    #d_final = {k: d[k]for k in list(d)}
+
+    print(d)
+    print(len(d))
+
+    print(d_final)
+    print(len(d_final))
+    return d_final
+
+
 
 
 def generateNewFolders(reps):
@@ -308,9 +354,13 @@ def generateNewFolders(reps):
 
 
 
+
+
+
 def main():
     #generateNewFolders(getSalesRep())
     loopRosterUploadFiles(INCLUDE_LIST)
+
 
 if __name__ == '__main__':
     main()

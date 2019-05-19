@@ -31,20 +31,20 @@ import datetime
 import csv
 
 
-CLIENT_SECRET = "/Users/eyanamallari/Projects/py_distribute_data/client_secret.json"
+CLIENT_SECRET = "/Users/eyana.mallari/Projects-Local/client_secret_eyanag.json"
 
 
 
-FILE_MASTERLIST = '/Users/eyanamallari/Projects/py_distribute_data/Input/CONTACTS_ALL_STATIC.xlsx'
-FILE_TEMPLATE ='/Users/eyanamallari/Projects/py_distribute_data/Input/Contacts_Template.xlsx'
-FILE_FOLDERS = '/Users/eyanamallari/Projects/py_distribute_data/Input/Pigeon Masterlist - Folders Lookup.csv'
-OUTPUT_DIRECTORY = '/Users/eyanamallari/Projects/py_distribute_data/Output/'
+FILE_MASTERLIST = 'Input/CONTACTS_ALL_STATIC.xlsx'
+FILE_TEMPLATE ='Input/Contacts_Template.xlsx'
+FILE_FOLDERS = 'Input/Pigeon Masterlist - Folders Lookup.csv'
+OUTPUT_DIRECTORY = 'Output/'
 EXCLUDE_LIST = []
 INCLUDE_LIST = ['Calista Rosales', 'Bianca Cardenas', 'Colette Black']
 
 now = datetime.datetime.now()
-QUARTER = "2018Q3"
-MONTH = "Sept 2018"
+QUARTER = "2019Q2"
+MONTH = "May 2019"
 VERSION = str(now.month).zfill(2) + str(now.day).zfill(2)
 
 df = pd.read_excel(FILE_MASTERLIST,"CONTACTS_FINAL")

@@ -31,7 +31,7 @@ import datetime
 import csv
 
 
-CLIENT_SECRET = "/Users/eyanamallari/Projects/py_distribute_data/client_secret.json"
+CLIENT_SECRET = "/Users/eyana.mallari/Projects-Local/client_secret_eyanag.json"
 
 
 

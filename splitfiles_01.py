@@ -18,10 +18,10 @@ from time import sleep
 import datetime
 import csv
 
-FILE_MASTERLIST = '/Users/eyanamallari/Projects/py_distribute_data/Input/CONTACTS_ALL_STATIC.xlsx'
-FILE_TEMPLATE ='/Users/eyanamallari/Projects/py_distribute_data/Input/Contacts_Template.xlsx'
+FILE_MASTERLIST = 'Input/CONTACTS_ALL_STATIC.xlsx'
+FILE_TEMPLATE ='Input/Contacts_Template.xlsx'
 
-OUTPUT_DIRECTORY = '/Users/eyanamallari/Projects/py_distribute_data/Output/'
+OUTPUT_DIRECTORY = 'Output/'
 EXCLUDE_LIST = []
 INCLUDE_LIST = ['Calista Rosales', 'Bianca Cardenas', 'Colette Black']
 
