@@ -26,9 +26,10 @@ EXCLUDE_LIST = []
 INCLUDE_LIST = ['Calista Rosales', 'Bianca Cardenas', 'Colette Black']
 
 now = datetime.datetime.now()
-QUARTER = "2018Q3"
-MONTH = "Sept 2018"
+QUARTER = "2019Q2"
+MONTH = "May 2019"
 VERSION = str(now.month).zfill(2) + str(now.day).zfill(2)
+
 
 df = pd.read_excel(FILE_MASTERLIST,"CONTACTS_FINAL")
 
@@ -40,14 +41,20 @@ def getSalesRep():
     df['Sales Representative'].fillna('Unknown', inplace = True)
     print('Getting all Sales Representatives')
 
+    # --- Include All ----
+    #df_filtered = df[~df['Sales Representative'].isin(EXCLUDE_LIST)]
+    df_roster = df['Sales Representative'].unique()
+
+
+
     # --- EXCLUDE REPS ----
     #df_filtered = df[~df['Sales Representative'].isin(EXCLUDE_LIST)]
     #df_roster = df_filtered['Sales Representative'].unique()
 
 
     # --- INCLUDE REPS ----
-    df_filtered = df[df['Sales Representative'].isin(INCLUDE_LIST)]
-    df_roster = df_filtered['Sales Representative'].unique()
+    #df_filtered = df[df['Sales Representative'].isin(INCLUDE_LIST)]
+    #df_roster = df_filtered['Sales Representative'].unique()
 
     #df_roster = df['Sales Representative'].unique()
 
