@@ -37,7 +37,6 @@ CLIENT_SECRET = "/Users/eyana.mallari/Projects-Local/client_secret_eyanag.json"
 
 FILE_MASTERLIST = 'Input/CONTACTS_ALL_STATIC.xlsx'
 FILE_TEMPLATE ='Input/Contacts_Template.xlsx'
-FILE_FOLDERS = 'Input/Pigeon Masterlist - Folders Lookup.csv'
 OUTPUT_DIRECTORY = 'Output/'
 EXCLUDE_LIST = []
 INCLUDE_LIST = ['Calista Rosales', 'Bianca Cardenas', 'Colette Black']
@@ -300,8 +299,13 @@ def loopRosterUploadFiles(reps):
         rep_excel_path = output_folder+"/"+rep_excel_file
 
 
-        # Uploads to Google Drive
+        # Create folder if it doesnt exist yet
+        if folderInGDrive(output_rep) is False:
+            createGDriveFolder(output_rep,PARENT_FOLDER)
+            print('Folder created for', rep)
+
         loopGSpreadsheet(writeToGDrive(rep_excel_file_no_ext,rep_excel_path,getFolderfromGDrive(output_rep)))
+
 
 
 def getSalesRep():
