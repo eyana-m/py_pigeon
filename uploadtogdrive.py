@@ -33,8 +33,6 @@ import csv
 
 CLIENT_SECRET = "/Users/eyana.mallari/Projects-Local/client_secret_eyanag.json"
 
-
-
 FILE_MASTERLIST = 'Input/CONTACTS_ALL_STATIC.xlsx'
 FILE_TEMPLATE ='Input/Contacts_Template.xlsx'
 OUTPUT_DIRECTORY = 'Output/'
@@ -88,18 +86,6 @@ def folderInGDrive(filename):
     else:
         return False
 
-# ---------------------------------------
-# GDrive API: Create New Folder
-# ---------------------------------------
-def createGDriveFolder(filename,parent):
-    file_metadata = {'name': filename,'parents': [parent],
-    'mimeType': "application/vnd.google-apps.folder"}
-
-    folder = SERVICE.files().create(body=file_metadata,
-                                        fields='id').execute()
-    print('Upload Success!')
-    print('FolderID:', folder.get('id'))
-    return folder.get('id')
 
 
 # ---------------------------------------
@@ -223,7 +209,6 @@ def loopGSpreadsheet(spreadsheet_id):
     for sheet in sheets:
         sheet_title = sheet.get("properties", {}).get("title")
         print("Processing ", sheet_title)
-        #print(sheet)
 
         sheet_id = sheet.get("properties", {}).get("sheetId")
         freezeCells(spreadsheet_id,sheet_id)
@@ -318,10 +303,12 @@ def getSalesRep():
 
 
     # --- INCLUDE REPS ----
-    df_filtered = df[df['Sales Representative'].isin(INCLUDE_LIST)]
-    df_roster = df_filtered['Sales Representative'].unique()
+    #df_filtered = df[df['Sales Representative'].isin(INCLUDE_LIST)]
+    #df_roster = df_filtered['Sales Representative'].unique()
 
-    #df_roster = df['Sales Representative'].unique()
+
+    # --- All Sales Rep ----
+    df_roster = df['Sales Representative'].unique()
 
     print(df_roster)
     d = df_roster.tolist()
@@ -363,7 +350,7 @@ def generateNewFolders(reps):
 
 def main():
     #generateNewFolders(getSalesRep())
-    loopRosterUploadFiles(INCLUDE_LIST)
+    loopRosterUploadFiles(getSalesRep())
 
 
 if __name__ == '__main__':
