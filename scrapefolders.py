@@ -53,6 +53,7 @@ FOLDER_ID = '19FBo4iSjyCS3NcqX6zaNgxtXWMqW7AyM'
 SS_ID = '1qs2GXzxhbn8klcB3Y-qQVJs0CRt8iQ20LyntKP36BRY'
 SHEET_ID=227869185
 TAB_NAME ='Folders Lookup!A2:H'
+CHAR_BEFORE_NAME = 16
 now = datetime.datetime.now()
 
 def countFiles(folder_id):
@@ -137,12 +138,7 @@ def getAllFolders(folder_id, spreadsheet_id):
         print(count)
         print('{0} ({1})'.format(item['name'], item['id']))
 
-        isManager = item['name'].find("] ")+1
-
-        if isManager > 1:
-            person_name = item['name'][isManager+15:].strip()
-        else:
-            person_name = item['name'][5:].strip()
+        person_name = item['name'][CHAR_BEFORE_NAME:].strip()
 
 
         file_count = countFiles(item['id'])
@@ -160,12 +156,10 @@ def getAllFolders(folder_id, spreadsheet_id):
         #item['link'] ="https://drive.google.com/drive/folders/"+item['id']
         item['link'] = '=HYPERLINK("https://drive.google.com/drive/folders/'+item['id']+'","Click")'
 
-        values.append([item['person'],item['name'],item['link'],item['id'],item['file_count'],latestFileId,createdDate,latestFile])
+        values.append([item['person'],item['name'],item['link'],item['id'],item['file_count'],latestFile,latestFileId,createdDate])
 
 
         count+=1
-        #range_ = 'Folder Lookup June 8!A'+str(count)+':F'+str(count)
-        #values = [[item['person'],item['name'],item['link'],item['id'],item['file_count'],str(now)]]
     writeToSheets(values,TAB_NAME,spreadsheet_id)
 
 
@@ -178,7 +172,7 @@ def colorAndSort(spreadsheet_id):
         'sheetId': sheet_id,
         'startRowIndex': 1,
         'endRowIndex': 600,
-        'startColumnIndex': 5,
+        'startColumnIndex': 4,
         'endColumnIndex': 5,
     }
     requests = [{
@@ -188,7 +182,7 @@ def colorAndSort(spreadsheet_id):
                 'booleanRule': {
                     'condition': {
                         'type': 'CUSTOM_FORMULA',
-                        'values': [ { 'userEnteredValue': '=GT($E1,0)'} ]
+                        'values': [ { 'userEnteredValue': '=GT($E2,1)'} ]
                     },
                     'format': {
                         'backgroundColor': { 'red': 1, 'green': 1, 'blue': 0 }
@@ -204,7 +198,7 @@ def colorAndSort(spreadsheet_id):
             "startRowIndex": 1,
             "endRowIndex": 600,
             "startColumnIndex": 0,
-            "endColumnIndex": 7
+            "endColumnIndex": 9
         },
         "sortSpecs": [
           {
@@ -212,7 +206,11 @@ def colorAndSort(spreadsheet_id):
             "sortOrder": "DESCENDING"
           },
           {
-            "dimensionIndex": 1,
+            "dimensionIndex": 7,
+            "sortOrder": "DESCENDING"
+          },
+          {
+            "dimensionIndex": 0,
             "sortOrder": "ASCENDING"
           }
         ]
@@ -226,21 +224,6 @@ def colorAndSort(spreadsheet_id):
     response = SS_SERVICE.spreadsheets().batchUpdate(spreadsheetId=spreadsheet_id, body=body).execute()
     print('{0} cells updated.'.format(len(response.get('replies'))));
 
-
-def readSheet():
-
-    SPREADSHEET_ID =  SS_ID
-    RANGE_NAME = 'Test!A1:B'
-    results = SS_SERVICE.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID,
-                                                 range=RANGE_NAME).execute()
-    values = results.get('values', [])
-    if not values:
-        print('No data found.')
-    else:
-        print('Name, Major:')
-        for row in values:
-            # Print columns A and E, which correspond to indices 0 and 4.
-            print('%s, %s' % (row[0], row[1]))
 
 
 def main():
