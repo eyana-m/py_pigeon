@@ -202,7 +202,7 @@ def colorAndSort(spreadsheet_id):
         },
         "sortSpecs": [
           {
-            "dimensionIndex": 4,
+            "dimensionIndex": 6,
             "sortOrder": "DESCENDING"
           },
           {
