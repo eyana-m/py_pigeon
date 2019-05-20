@@ -204,11 +204,11 @@ def colorAndSort(spreadsheet_id):
             "startRowIndex": 1,
             "endRowIndex": 600,
             "startColumnIndex": 0,
-            "endColumnIndex": 7
+            "endColumnIndex": 9
         },
         "sortSpecs": [
           {
-            "dimensionIndex": 4,
+            "dimensionIndex": 6,
             "sortOrder": "DESCENDING"
           },
           {
