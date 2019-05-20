@@ -52,7 +52,7 @@ SS_SERVICE = build('sheets', 'v4', http=creds.authorize(Http()))
 FOLDER_ID = '19FBo4iSjyCS3NcqX6zaNgxtXWMqW7AyM'
 SS_ID = '1qs2GXzxhbn8klcB3Y-qQVJs0CRt8iQ20LyntKP36BRY'
 SHEET_ID=227869185
-TAB_NAME ='Folders Lookup!A2:G'
+TAB_NAME ='Folders Lookup!A2:H'
 now = datetime.datetime.now()
 
 def countFiles(folder_id):
@@ -68,20 +68,42 @@ def countFiles(folder_id):
         count += 1
     return count
 
-def getLastModifiedDate(folder_id, count):
+def getLatestFile(folder_id):
 # Main Folder
 
-    results = DRIVE_SERVICE.files().list(q="mimeType='application/vnd.google-apps.spreadsheet' and parents in '"+folder_id+"' and trashed = false",fields="nextPageToken, files(id, name, modifiedTime)").execute()
+    results = DRIVE_SERVICE.files().list(q="mimeType='application/vnd.google-apps.spreadsheet' and parents in '"+folder_id+"' and trashed = false",fields="nextPageToken, files(id, name, createdTime)", orderBy="createdTime").execute()
+
+
+    #results = DRIVE_SERVICE.files().list(q="parents in '"+folder_id+"' and trashed = false",fields="nextPageToken, files(id, name, createdTime)", orderBy="createdTime").execute()
+
 
     items = results.get('files', [])
-
-    #print(items)
 
     if not items:
         return ""
     else:
-        print(items[count-1]['modifiedTime'])
-        return items[count-1]['modifiedTime']
+        return items
+def retrieveId(items,count):
+    if not items:
+        return ""
+    else:
+        print(items[count-1]['id'])
+        return items[count-1]['id']
+
+
+def retrieveName(items,count):
+    if not items:
+        return ""
+    else:
+        print(items[count-1]['name'])
+        return items[count-1]['name']
+
+def retrieveCreatedDate(items,count):
+    if not items:
+        return ""
+    else:
+        print(items[count-1]['createdTime'])
+        return items[count-1]['createdTime']
 
 
 
@@ -101,7 +123,7 @@ def getAllFolders(folder_id, spreadsheet_id):
 # Main Folder
     folder_id = FOLDER_ID
 
-    results = DRIVE_SERVICE.files().list(q="mimeType='application/vnd.google-apps.folder' and parents in '"+folder_id+"' and trashed = false",fields="nextPageToken, files(id, name)",pageSize=700).execute()
+    results = DRIVE_SERVICE.files().list(q="mimeType='application/vnd.google-apps.folder' and parents in '"+folder_id+"' and trashed = false",fields="nextPageToken, files(id, name)",pageSize=400).execute()
 
     items = results.get('files', [])
 
@@ -118,22 +140,28 @@ def getAllFolders(folder_id, spreadsheet_id):
         isManager = item['name'].find("] ")+1
 
         if isManager > 1:
-            person_name = item['name'][isManager+16:].strip()
+            person_name = item['name'][isManager+15:].strip()
         else:
-            person_name = item['name'][16:].strip()
+            person_name = item['name'][5:].strip()
 
 
         file_count = countFiles(item['id'])
+        latestFileId = '=HYPERLINK("https://docs.google.com/spreadsheets/d/'+retrieveId(getLatestFile(item['id']),file_count)+'","Click")'
+
+        latestFile = retrieveName(getLatestFile(item['id']),file_count)
+        createdDate = retrieveCreatedDate(getLatestFile(item['id']),file_count)
 
         print("----", person_name)
         print("----", file_count)
+        print("----", createdDate)
 
         item['person'] = person_name
         item['file_count'] = file_count
-        item['link'] ="https://drive.google.com/drive/folders/"+item['id']
+        #item['link'] ="https://drive.google.com/drive/folders/"+item['id']
+        item['link'] = '=HYPERLINK("https://drive.google.com/drive/folders/'+item['id']+'","Click")'
 
+        values.append([item['person'],item['name'],item['link'],item['id'],item['file_count'],latestFileId,createdDate,latestFile])
 
-        values.append([item['person'],item['name'],item['link'],item['id'],item['file_count'],str(now)])
 
         count+=1
         #range_ = 'Folder Lookup June 8!A'+str(count)+':F'+str(count)
