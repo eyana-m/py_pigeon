@@ -12,21 +12,14 @@ import time
 
 
 CREDENTIALS_USER ="eyana.mallari@rcoffice.ringcentral.com"
-CREDENTIALS_PASS = "x"
+CREDENTIALS_PASS = "<password>"
 EMAIL_FROM_DEFAULT = "eyana.mallari@ringcentral.com"
 
+EMAIL_SUBJECT = "Hello There!"
 EMAIL_CC_DEFAULT = ""
 EMAIL_BCC_DEFAULT = ""
 
 CONTACTS_FILE = "/Users/eyana.mallari/Projects-Local/py_teamlink/Input/CONTACTS SAMPLE2.csv"
-
-
-def read_template(filename):
-
-    with open(filename, 'r') as template_file:
-        template_file_content = template_file.read()
-        print(template_file_content)
-    return template_file_content
 
 
 def getEmailContent(first_name):

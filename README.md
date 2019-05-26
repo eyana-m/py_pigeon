@@ -1,26 +1,18 @@
 # Distribute data using python
 
-* Split and distribute **contacts** to **sales representative** automatically
+* Split and distribute **files** to **sales representative** automatically
 
 ## Tools:
 1. Python
 2. Google API (GDrive, GSheet)
 
-# Notes:
-* 1 GSheet = Owner
+## Tutorials
 
-## Code Logic
-
-1. Create file by Teamlink
+1. Split Excel files - [Click here](http://eyana.me/split-excel-files-using-python/)
+2. Upload files to Google Drive - [Part 1](http://eyana.me/upload-files-to-gdrive-using-python-part-1/), [Part 2]((http://eyana.me/upload-files-to-gdrive-using-python-part-1/))
 4. Upload to GDrive - Python, GDrive API
 5. Freeze top visible row and column - Python, GSheet API
 
-
-## Email Code logic
-
-
-1. Attachment
-2. Log sent messages
 
 
 # Workflow
